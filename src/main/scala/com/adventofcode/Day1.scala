@@ -21,7 +21,7 @@ object Day1 {
   }
 
   def main(args: Array[String]): Unit = {
-    val calories = Common.readFile("src/main/resources/day1/task1.txt", convert)
+    val calories = Common.readFile("src/main/resources/day1/task.txt", convert)
 
     println(calories.map(task1))
     println(calories.map(task2))
