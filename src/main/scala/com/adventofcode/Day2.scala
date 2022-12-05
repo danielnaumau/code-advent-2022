@@ -44,7 +44,7 @@ object Day2 {
         leftMove <- read(leftChar)
         rightMove <- read(rightChar)
       } yield calculateScore(leftMove, rightMove)
-    }
+  }
 
 
   object Task2 {
@@ -72,7 +72,6 @@ object Day2 {
       } yield calculateScore(leftMove, rightMove)
   }
 
-
   sealed trait Move {
     def score: Int
     def beats: Move
@@ -80,7 +79,6 @@ object Day2 {
   }
 
   object Move {
-
 
     object Rock extends Move {
       override def score: Int = 1
