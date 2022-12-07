@@ -14,7 +14,7 @@ object Day2 {
 
   def convert(score: (Char, Char) => Option[Int])(lines: List[String]): List[Int] =
     lines.flatMap {
-      _.toCharArray.toList match {
+      _.toList match {
         case left :: ' ' :: right :: Nil =>
           score(left, right)
         case _                           => None

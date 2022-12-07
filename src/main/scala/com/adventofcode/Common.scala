@@ -28,4 +28,9 @@ object Common {
     def :+(value: A): NonEmptyList[A] =
       this.copy(tail = tail :+ value)
   }
+
+  implicit class IntConversion(char: Char) {
+    def toIntOpt: Option[Int] =
+      char.toString.toIntOption
+  }
 }
