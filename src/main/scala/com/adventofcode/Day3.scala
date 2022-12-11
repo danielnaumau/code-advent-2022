@@ -12,9 +12,8 @@ object Day3 {
 
   def solve(commonItems: List[String] => List[Char]): Option[Int] =
     Common
-      .readFile("src/main/resources/day3/task.txt", commonItems)
+      .readFile("src/main/resources/day3/crates.txt", commonItems)
       .map(_.map(calculatePriority).sum)
-
 
   def calculatePriority(char: Char): Int =
     if (lowercase.contains(char))
@@ -23,7 +22,6 @@ object Day3 {
       char.toInt - 38
     else
       0
-
 
   object Task2 {
     def commonItems(lines: List[String]): List[Char] =
@@ -41,6 +39,8 @@ object Day3 {
   }
 
   def intersect(values: List[Set[Char]]): Set[Char] =
-    values.fold(values.headOption.getOrElse(Set.empty))((res, cur) => res.intersect(cur))
+    values.fold(values.headOption.getOrElse(Set.empty))((res, cur) =>
+      res.intersect(cur)
+    )
 
 }

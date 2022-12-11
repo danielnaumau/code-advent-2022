@@ -9,15 +9,17 @@ object Day2 {
 
   def solve(score: (Char, Char) => Option[Int]): Option[Int] =
     Common
-      .readFile("src/main/resources/day2/task.txt", convert(score))
+      .readFile("src/main/resources/day2/crates.txt", convert(score))
       .map(_.sum)
 
-  def convert(score: (Char, Char) => Option[Int])(lines: List[String]): List[Int] =
+  def convert(
+      score: (Char, Char) => Option[Int]
+  )(lines: List[String]): List[Int] =
     lines.flatMap {
       _.toList match {
         case left :: ' ' :: right :: Nil =>
           score(left, right)
-        case _                           => None
+        case _ => None
       }
     }
 
@@ -45,7 +47,6 @@ object Day2 {
         rightMove <- read(rightChar)
       } yield calculateScore(leftMove, rightMove)
   }
-
 
   object Task2 {
 

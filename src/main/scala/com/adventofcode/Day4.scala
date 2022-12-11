@@ -26,7 +26,7 @@ object Day4 {
   }
 
   def solve(condition: (Section, Section) => Boolean): Option[Int] =
-    Common.readFile("src/main/resources/day4/task.txt", convert(condition))
+    Common.readFile("src/main/resources/day4/crates.txt", convert(condition))
 
   object Task1 {
     def contain(leftSection: Section, rightSection: Section): Boolean =

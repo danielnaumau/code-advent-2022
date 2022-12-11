@@ -5,7 +5,9 @@ import scala.util.Using
 
 object Common {
   def readFile[T](path: String, convert: List[String] => T): Option[T] =
-    Using(Source.fromFile(path))(file => convert(file.getLines().toList)).toOption
+    Using(Source.fromFile(path))(file =>
+      convert(file.getLines().toList)
+    ).toOption
 
   final case class NonEmptyList[A](head: A, tail: List[A] = Nil) {
     def map[V](fun: A => V): NonEmptyList[V] =
@@ -29,8 +31,22 @@ object Common {
       this.copy(tail = tail :+ value)
   }
 
-  implicit class IntConversion(char: Char) {
-    def toIntOpt: Option[Int] =
-      char.toString.toIntOption
+  final case class Matrix[T](values: List[List[T]]) {
+    def addRow(row: List[T]): Matrix[T] =
+      Matrix(
+        values
+          .zip(row)
+          .map { case (allValues, newRow) =>
+            allValues :+ newRow
+          }
+      )
+  }
+
+  object Matrix {
+    def fill[T](height: Int, width: Int)(elem: T): Matrix[T] =
+      new Matrix[T](List.fill(width)(List.fill(height)(elem)))
+
+    def empty[T](width: Int): Matrix[T] =
+      new Matrix[T](List.fill(width)(List()))
   }
 }
