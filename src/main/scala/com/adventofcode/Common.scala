@@ -5,9 +5,21 @@ import scala.util.Using
 
 object Common {
   implicit class MapHelper(map: Map[String, Long]) {
-    def addOrUpdate(key: String, value: Long): Map[String, Long] = {
+    def addOrUpdate(key: String, value: Long): Map[String, Long] =
       map + (key -> (map.getOrElse(key, 0L) + value))
-    }
+  }
+
+  implicit class ListHelper[A](l: List[Option[A]]) {
+    def sequence: Option[List[A]] =
+      l.foldLeft[Option[List[A]]](Some(List.empty[A])) {
+        case (Some(list), Some(cur)) => Some(list :+ cur)
+        case (_, _)                  => None
+      }
+  }
+
+  implicit class CharHelper(char: Char) {
+    def toIntOption: Option[Int] =
+      char.toString.toIntOption
   }
 
   def readFile[T](path: String, convert: List[String] => T): Option[T] =
@@ -46,6 +58,19 @@ object Common {
             allValues :+ newRow
           }
       )
+
+    def height: Int = values.headOption.map(_.length).getOrElse(0)
+
+    def width: Int = values.length
+
+    def getColumn(index: Int): Option[List[T]] =
+      values.lift(index)
+
+    def get(rowIndex: Int, columnIndex: Int): Option[T] =
+      values.lift(columnIndex).flatMap(_.lift(rowIndex))
+
+    def getRow(index: Int): Option[List[T]] =
+      values.map(_.lift(index)).sequence
   }
 
   object Matrix {
