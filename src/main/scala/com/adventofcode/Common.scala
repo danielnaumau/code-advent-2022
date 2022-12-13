@@ -4,6 +4,12 @@ import scala.io.Source
 import scala.util.Using
 
 object Common {
+  implicit class MapHelper(map: Map[String, Long]) {
+    def addOrUpdate(key: String, value: Long): Map[String, Long] = {
+      map + (key -> (map.getOrElse(key, 0L) + value))
+    }
+  }
+
   def readFile[T](path: String, convert: List[String] => T): Option[T] =
     Using(Source.fromFile(path))(file =>
       convert(file.getLines().toList)
