@@ -17,6 +17,8 @@ object Common {
       }
   }
 
+  final case class Coordinate(x: Int, y: Int)
+
   implicit class CharHelper(char: Char) {
     def toIntOption: Option[Int] =
       char.toString.toIntOption
@@ -71,6 +73,11 @@ object Common {
 
     def getRow(index: Int): Option[List[T]] =
       values.map(_.lift(index)).sequence
+  }
+
+  object NonEmptyList {
+    def fill[A](tailSize: Int)(a: A): NonEmptyList[A] =
+      NonEmptyList(a, List.fill(tailSize)(a))
   }
 
   object Matrix {
