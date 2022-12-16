@@ -49,6 +49,9 @@ object Common {
 
     def :+(value: A): NonEmptyList[A] =
       this.copy(tail = tail :+ value)
+
+    def ++(values: List[A]): NonEmptyList[A] =
+      this.copy(tail = tail ++ values)
   }
 
   final case class Matrix[T](values: List[List[T]]) {
