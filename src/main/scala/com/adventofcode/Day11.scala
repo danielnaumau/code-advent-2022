@@ -21,7 +21,6 @@ object Day11 {
       modOpt
         .map(mod => Item((item.value * value.getOrElse(item.value)) % mod))
         .getOrElse(Item((item.value * value.getOrElse(item.value)) / 3))
-
   }
 
   final case class MonkeyAction(
@@ -142,7 +141,7 @@ object Day11 {
       actions: List[MonkeyAction],
       cycles: Int,
       useMod: Boolean
-  ) = {
+  ): Long = {
     val mod = Option.when(useMod)(actions.map(_.divisibleBy).product)
     (0 until cycles).toList
       .foldLeft(actions)((curActions, _) => runCycle(curActions, mod))
@@ -159,7 +158,7 @@ object Day11 {
       .flatMap(parseActions)
       .toList
 
-  def solve(cycles: Int, useMod: Boolean) =
+  def solve(cycles: Int, useMod: Boolean): Option[Long] =
     Common
       .readFile("src/main/resources/day11/task.txt", parse)
       .map(runCycles(_, cycles, useMod))
