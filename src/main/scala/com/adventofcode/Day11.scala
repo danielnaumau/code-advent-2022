@@ -166,6 +166,5 @@ object Day11 {
   def main(args: Array[String]): Unit = {
     println(solve(20, useMod = false))
     println(solve(10000, useMod = true))
-
   }
 }
