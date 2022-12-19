@@ -4,17 +4,30 @@ import scala.io.Source
 import scala.util.Using
 
 object Common {
+  implicit class IndexHelper[A](l: List[A]) {
+    def indexWhereOpt(fun: A => Boolean): Option[Int] =
+      l.indexWhere(fun) match {
+        case -1    => None
+        case value => Some(value)
+      }
+  }
+
   implicit class MapHelper(map: Map[String, Long]) {
     def addOrUpdate(key: String, value: Long): Map[String, Long] =
       map + (key -> (map.getOrElse(key, 0L) + value))
   }
 
-  implicit class ListHelper[A](l: List[Option[A]]) {
+  implicit class ListSequence[A](l: List[Option[A]]) {
     def sequence: Option[List[A]] =
       l.foldLeft[Option[List[A]]](Some(List.empty[A])) {
         case (Some(list), Some(cur)) => Some(list :+ cur)
         case (_, _)                  => None
       }
+  }
+
+  implicit class ListTraverse[A](l: List[A]) {
+    def traverse[B](fun: A => Option[B]): Option[List[B]] =
+      l.map(fun).sequence
   }
 
   final case class Coordinate(x: Int, y: Int)
