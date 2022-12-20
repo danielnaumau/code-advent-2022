@@ -67,6 +67,8 @@ object Common {
       this.copy(tail = tail ++ values)
   }
 
+  final case class MatrixValue[T](value: T, coordinate: Coordinate)
+
   final case class Matrix[T](values: List[List[T]]) {
     def addRow(row: List[T]): Matrix[T] =
       Matrix(
@@ -81,14 +83,37 @@ object Common {
 
     def width: Int = values.length
 
-    def getColumn(index: Int): Option[List[T]] =
-      values.lift(index)
+    def getColumn(x: Int): Option[List[T]] =
+      values.lift(x)
 
-    def get(rowIndex: Int, columnIndex: Int): Option[T] =
-      values.lift(columnIndex).flatMap(_.lift(rowIndex))
+    def find(value: T): Option[MatrixValue[T]] =
+      for {
+        x <- values.indexWhereOpt(_.contains(value))
+        y <- values.lift(x).flatMap(_.indexWhereOpt(_ == value))
+      } yield MatrixValue(value, Coordinate(x, y))
 
-    def getRow(index: Int): Option[List[T]] =
-      values.map(_.lift(index)).sequence
+    def findAll(value: T): List[MatrixValue[T]] =
+      for {
+        (column, x) <- values.zipWithIndex.filter(_._1.contains(value))
+        y <- column.zipWithIndex.filter(_._1 == value).map(_._2)
+      } yield MatrixValue(value, Coordinate(x, y))
+
+    def neighbours(y: Int, x: Int): List[MatrixValue[T]] =
+      List(
+        getMatrixValue(x - 1, y),
+        getMatrixValue(x, y - 1),
+        getMatrixValue(x + 1, y),
+        getMatrixValue(x, y + 1)
+      ).flatten
+
+    def getMatrixValue(x: Int, y: Int): Option[MatrixValue[T]] =
+      get(y, x).map(MatrixValue(_, Coordinate(x, y)))
+
+    def get(y: Int, x: Int): Option[T] =
+      values.lift(x).flatMap(_.lift(y))
+
+    def getRow(y: Int): Option[List[T]] =
+      values.map(_.lift(y)).sequence
   }
 
   object NonEmptyList {
