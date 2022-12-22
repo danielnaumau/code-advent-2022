@@ -131,19 +131,32 @@ object Day13 {
   }
 
   object Task2 {
-    def solve(allPackets: List[Packets]) =
-      allPackets
-        .flatMap(packets => List(packets.left, packets.right))
+    def solve(allPackets: List[Packets]): Int = {
+      val dividers = List(
+        Nested().add(Nested().add(Digit(2)).close).close,
+        Nested().add(Nested().add(Digit(6)).close).close
+      )
+
+      val unsortedPackets = allPackets.flatMap(packets =>
+        List(packets.left, packets.right)
+      ) ++ dividers
+
+      unsortedPackets
         .sortWith(rightOrder)
+        .zipWithIndex
+        .filter { case (packet, _) => dividers.contains(packet) }
+        .map(_._2 + 1)
+        .product
+    }
   }
 
-  def process() =
+  def process(fun: List[Packets] => Int): Option[Int] =
     Common
       .readFile("src/main/resources/day13/task.txt", readPackets)
-      .map(Task2.solve)
+      .map(fun)
 
   def main(args: Array[String]): Unit = {
-    process().foreach(_.foreach(println))
-    //println(process())
+    println(process(Task1.solve))
+    println(process(Task2.solve))
   }
 }
