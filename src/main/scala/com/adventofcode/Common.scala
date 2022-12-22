@@ -30,6 +30,21 @@ object Common {
       l.map(fun).sequence
   }
 
+  implicit class ListUpdatedWith[A](l: List[A]) {
+    def updatedWith(index: Int, fun: A => A): List[A] =
+      l.lift(index) match {
+        case Some(value) => l.updated(index, fun(value))
+        case None        => l
+      }
+  }
+
+  implicit class MatrixCharHelper(m: Matrix[Char]) {
+    def image: String =
+      (0 until m.height).toList
+        .flatMap(y => m.getRow(y).map(_.mkString))
+        .mkString("\n")
+  }
+
   final case class Coordinate(x: Int, y: Int)
 
   implicit class CharHelper(char: Char) {
@@ -77,6 +92,18 @@ object Common {
           .map { case (allValues, newRow) =>
             allValues :+ newRow
           }
+      )
+
+    def update(newValues: List[MatrixValue[T]]): Matrix[T] =
+      newValues.foldLeft(this)(_.update(_))
+
+    def update(newValue: MatrixValue[T]): Matrix[T] =
+      Matrix(
+        values
+          .updatedWith(
+            newValue.coordinate.x,
+            _.updated(newValue.coordinate.y, newValue.value)
+          )
       )
 
     def height: Int = values.headOption.map(_.length).getOrElse(0)
